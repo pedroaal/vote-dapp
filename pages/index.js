@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Web3Container from '../util/Web3Container'
 import { useState } from 'react';
 
-function Dapp({ web3, accounts, contract }) {
+function Dapp({ web3, stats, contract }) {
   const [balance, setbalance] = useState()
   const [ethBalance, setEthBalance] = useState()
 
@@ -39,8 +39,8 @@ export default function Home() {
 
       <Web3Container
         renderLoading={() => <div>Loading Dapp Page...</div>}
-        render={({ web3, accounts, contract }) => (
-          <Dapp web3={web3} accounts={accounts} contract={contract} />
+        render={({ web3, stats, contract }) => (
+          <Dapp web3={web3} stats={stats} contract={contract} />
         )}
       />
     </div>
