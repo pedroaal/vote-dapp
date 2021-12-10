@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 contract Vote {
-   
+    
     struct Voter {
         uint ci;
         bool voted;
@@ -13,7 +13,7 @@ contract Vote {
         uint voteCount; // number of accumulated votes
     }
 
-    mapping(address => Voter) public voters;
+    mapping(uint => Voter) public voters;
 
     Proposal[] public proposals;
 
@@ -29,7 +29,7 @@ contract Vote {
     }
 
     function vote(uint _proposal, uint _ci) public {
-        Voter storage sender = voters[msg.sender];
+        Voter storage sender = voters[_ci];
         require(!sender.voted, "Already voted.");
         sender.ci = _ci;
         sender.voted = true;
@@ -56,8 +56,7 @@ contract Vote {
      * @dev Calls winningProposal() function to get the index of the winner contained in the proposals array and then
      * @return winnerName_ the name of the winner
      */
-    function winnerName() public view
-            returns (string memory winnerName_)
+    function winnerName() public view returns (string memory winnerName_)
     {
         winnerName_ = proposals[winningProposal()].name;
     }
