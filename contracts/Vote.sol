@@ -61,7 +61,7 @@ contract Vote {
         winnerName_ = proposals[winningProposal()].name;
     }
 
-    function giveStats() public view returns (Proposal[] memory proposals_) {
+    function getStats() public view returns (Proposal[] memory proposals_) {
         return proposals;
     }
 }
