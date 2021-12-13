@@ -28,6 +28,9 @@ contract Vote {
         }
     }
 
+    /** 
+     * @dev Store the person who vote. And compute the count in proposals
+     */
     function vote(uint _proposal, uint _ci) public {
         Voter storage sender = voters[_ci];
         require(!sender.voted, "Already voted.");
@@ -53,7 +56,8 @@ contract Vote {
     }
 
     /** 
-     * @dev Calls winningProposal() function to get the index of the winner contained in the proposals array and then
+     * @dev Calls winnerName() function to get the name od the proposal with the
+     * highest count
      * @return winnerName_ the name of the winner
      */
     function winnerName() public view returns (string memory winnerName_)
@@ -61,6 +65,10 @@ contract Vote {
         winnerName_ = proposals[winningProposal()].name;
     }
 
+    /** 
+     * @dev Calls getStats() function to get the all the proposalt at the block
+     * @return proposals_ array
+     */
     function getStats() public view returns (Proposal[] memory proposals_) {
         return proposals;
     }

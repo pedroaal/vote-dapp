@@ -1,30 +1,77 @@
-import Web3 from 'web3'
+import Web3 from 'web3';
+import voteContractBuild from '../build/contracts/Vote.json';
 
-const resolveWeb3 = (resolve) => {
-  let { web3 } = window
-  const alreadyInjected = typeof web3 !== 'undefined' // i.e. Mist/Metamask
-  const localProvider = `http://localhost:8545`
+let selectedAccount
+let voteContract
+let isInit = false
 
-  if (alreadyInjected) {
-    console.log(`Injected web3 detected.`)
-    web3 = new Web3(web3.currentProvider)
-  } else {
-    console.log(`No web3 instance injected, using Local web3.`)
-    const provider = new Web3.providers.HttpProvider(localProvider)
-    web3 = new Web3(provider)
+const init = async () => {
+  const providerUrl = process.env.PROVIDER_URL || 'http://localhost:8545'
+
+  // check for metamask
+  let provider = window.ethereum
+  if (typeof provider !== 'undefined') {
+    provider
+      .request({ method: 'eth_requestAccounts' })
+      .then(accounts => {
+        console.log('accounts: ', accounts)
+        selectedAccount = accounts[0]
+      })
+      .catch(err => {
+        console.log(err)
+        return
+      })
   }
+  // at wallet change
+  window
+    .ethereum.on('accountsChanged', accounts => {
+      console.log('accounts: ', accounts)
+      selectedAccount = accounts[0]
+    })
 
-  resolve(web3)
+  const web3 = new Web3(providerUrl)
+  const networkId = await web3.eth.net.getId()
+  console.log(networkId)
+
+  voteContract = new web3.eth.Contract(
+    voteContractBuild.abi,
+    voteContractBuild.networks[networkId].address
+  )
+  console.log(voteContract)
+
+  isInit = true
 }
 
-export default () =>
-  new Promise((resolve) => {
-    // Wait for loading completion to avoid race conditions with web3 injection timing.
-    window.addEventListener(`load`, () => {
-      resolveWeb3(resolve)
-    })
-    // If document has loaded already, try to get Web3 immediately.
-    if (document.readyState === `complete`) {
-      resolveWeb3(resolve)
-    }
-  })
+const vote = async ({ proposal, ci }) => {
+  if (!isInit) await init()
+
+  return voteContract
+    .methods
+    .vote(proposal, ci)
+    .send({ from: selectedAccount })
+    .then(vote => {
+      return Web3.utils.fromWei(balance);
+    });
+}
+
+const getWinner = async () => {
+  if (!isInit) await init()
+
+  return voteContract
+    .methods
+    .winnerName()
+    .call()
+}
+
+const getStats = async () => {
+  if (!isInit) await init()
+
+  return voteContract
+    .methods
+    .getStats()
+    .call()
+}
+
+export {
+  init, vote, getWinner, getStats
+}

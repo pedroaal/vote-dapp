@@ -1,29 +1,79 @@
-import Head from 'next/head'
-import Web3Container from '../util/Web3Container'
-import { useState } from 'react';
+import Head from 'next/head';
+import React, { useState, useEffect } from 'react';
 
-function Dapp({ web3, stats, contract }) {
-  const [balance, setbalance] = useState()
-  const [ethBalance, setEthBalance] = useState()
+import { init, vote, getWinner, getStats } from '../util/getWeb3';
 
-  getStats = async () => { }
+function Dapp() {
+  const [state, setState] = useState({ proposal: '', ci: '' })
+  const [winner, setWinner] = useState('')
+  const [stats, setStats] = useState([])
 
-  vote = async () => {
-    // const balanceInWei = await web3.eth.getBalance(accounts[0])
+  const getStatsF = () => {
+    getStats()
+      .then(tx => {
+        console.log(tx)
+        setStats(tx)
+      })
+      .catch(err => console.log(err))
+  }
+
+  useEffect(() => {
+    init()
+    getStatsF()
+  }, [])
+
+  const giveVote = () => {
+    vote(state)
+      .then(tx => console.log(tx))
+      .catch(err => console.log(err))
   };
 
-  (
+  const getWinnerF = () => {
+    getWinner()
+      .then(tx => {
+        console.log(tx)
+        setWinner(tx)
+      })
+      .catch(err => console.log(err))
+  };
+
+  const handleSelect = event => {
+    setState({
+      ...state,
+      [event.target.name]: event.target.value
+    })
+  }
+
+  return (
     <>
-      <div class="form-group">
-        <label for="proposal">Candidatos</label>
-        <select class="form-control" name="proposal" id="proposal">
-          <option value='1'>Candidato 1</option>
-          <option value='2'>Candidato 2</option>
-          <option value='3'>Candidato 3</option>
+      {
+        winner &&
+        <p>Actual winner: {winner}</p>
+      }
+      {
+        stats &&
+        stats.map(proposal => (
+          <p>{proposal[0]}: {proposal[1]}</p>
+        ))
+      }
+      <div className="form-group">
+        <label htmlFor="proposal">Candidatos</label>
+        <select className="form-control" name="proposal" id="proposal" onChange={handleSelect}>
+          <option value=''>Selecciona uno...</option>
+          <option value='0'>Candidato 1</option>
+          <option value='1'>Candidato 2</option>
+          <option value='2'>Candidato 3</option>
         </select>
       </div>
 
-      <button type="button" name="vote" id="vote" class="btn btn-primary" onClick={vote}>Votar</button>
+      <div className="form-group">
+        <label htmlFor="ci">CI</label>
+        <input type="text" className="form-control" name="ci" id="ci" onChange={handleSelect} />
+      </div>
+
+      <button type="button" name="vote" id="vote" className="btn btn-primary" onClick={giveVote}>Votar</button>
+      <button type="button" name="vote" id="vote" className="btn btn-primary" onClick={getWinnerF}>get winner</button>
+      <button type="button" name="vote" id="vote" className="btn btn-primary" onClick={getStatsF}>get stats</button>
     </>
   )
 }
@@ -37,12 +87,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Web3Container
-        renderLoading={() => <div>Loading Dapp Page...</div>}
-        render={({ web3, stats, contract }) => (
-          <Dapp web3={web3} stats={stats} contract={contract} />
-        )}
-      />
+      <Dapp />
     </div>
   )
 }

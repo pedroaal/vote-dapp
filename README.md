@@ -13,3 +13,8 @@ $ ganache-cli
 
 truffle compile
 truffle migrate
+
+once compiled, to start next app
+```bash
+$ npm run dev
+```
