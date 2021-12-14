@@ -40,7 +40,9 @@ module.exports = (sequelize, type) => {
   return sequelize.define('civil', {
     ci: type.STRING,
     fingerprint: type.STRING,
-    full_name: type.STRING
+    name: type.STRING,
+    last_name: type.STRING,
+    status: type.BOOLEAN
   })
 }
 // export { CivilModel, createPersons }
