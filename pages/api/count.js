@@ -6,7 +6,7 @@ export default async (req, res) => {
   switch (method) {
     case ('GET'):
       Civil
-        .count()
+        .count({ where: { status: 1 } })
         .then(count => res.status(200).json(count))
         .catch(error => console.log(error))
       break

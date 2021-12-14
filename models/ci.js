@@ -42,7 +42,10 @@ module.exports = (sequelize, type) => {
     fingerprint: type.STRING,
     name: type.STRING,
     last_name: type.STRING,
-    status: type.BOOLEAN
+    status: {
+      type: type.BOOLEAN,
+      default: 1
+    }
   })
 }
 // export { CivilModel, createPersons }

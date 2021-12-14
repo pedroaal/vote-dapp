@@ -50,7 +50,9 @@ const createCis = async () => {
     Civil.create({
       ci: person.ci,
       fingerprint: person.fingerprint,
-      full_name: person.full_name,
+      name: person.name,
+      last_name: person.last_name,
+      status: person.status
     });
   })
 

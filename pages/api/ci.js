@@ -16,7 +16,7 @@ export default async (req, res) => {
       break
     case ('POST'):
       const { ci, fingerprint } = JSON.parse(req.body)
-      const person = await Civil.findOne({ where: { ci, fingerprint, state: 1 } })
+      const person = await Civil.findOne({ where: { ci, fingerprint, status: 1 } })
       const valid = person ? true : false
       res.status(200).send(valid)
       break
