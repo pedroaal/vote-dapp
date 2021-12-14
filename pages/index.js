@@ -32,10 +32,29 @@ const dataset = {
   borderWidth: 1,
 };
 
-const Home = () => {
+export async function getStaticProps(context) {
+  const baseURL = 'http://localhost:3000'
+  const res = await fetch(`${baseURL}/api/count`)
+  const data = await res.json()
+
+  if (!data) {
+    return {
+      notFound: true,
+    }
+  }
+
+  return {
+    props: {
+      total_votantes: data
+    },
+  }
+}
+
+const Home = ({ total_votantes }) => {
   const [state, setState] = useState({ proposal: '', ci: '', fingerprint: '' })
   const [winner, setWinner] = useState('')
   const [stats, setStats] = useState()
+  const [totalVotes, setTotalVotes] = useState(0)
 
   const getStatsF = () => {
     getStats()
@@ -51,6 +70,9 @@ const Home = () => {
           datasets
         }
         setStats(statsData)
+
+        const total = data.reduce((acc, item) => acc + item)
+        setTotalVotes(total)
       })
       .catch(err => console.log(err))
   }
@@ -112,6 +134,12 @@ const Home = () => {
         <Doughnut
           data={stats}
         />
+      }
+      {
+        totalVotes && total_votantes &&
+        <div className="progress my-2" style={{ height: 30 }}>
+          <div className="progress-bar" role="progressbar" aria-valuenow={totalVotes} aria-valuemin="0" aria-valuemax={total_votantes}>Votos</div>
+        </div>
       }
       {
         winner &&
