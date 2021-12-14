@@ -1,7 +1,13 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: "../database.sqlite3"
+const sequelize = new Sequelize('aes_db', null, null, {
+  host: 'localhost',
+  dialect: 'sqlite',
+  pool: {
+    max: 5,
+    min: 0,
+    idle: 10000
+  },
+  storage: './db.sqlite3'
 });
 
 const CivilModel = require('../models/ci')
@@ -41,10 +47,7 @@ const createCis = async () => {
 (async () => {
   await sequelize.sync();
   let persons = await Civil.findAll()
-  if (persons.length <= 0) {
-    persons = createCis()
-  }
-  console.log(persons);
+  if (persons.length <= 0) persons = createCis()
 })();
 
 export default Civil
