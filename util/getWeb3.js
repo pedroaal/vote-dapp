@@ -49,9 +49,7 @@ const vote = async ({ proposal, ci }) => {
     .methods
     .vote(proposal, ci)
     .send({ from: selectedAccount })
-    .then(vote => {
-      return Web3.utils.fromWei(balance);
-    });
+    .then(vote => vote);
 }
 
 const getWinner = async () => {
