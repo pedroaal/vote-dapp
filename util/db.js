@@ -19,17 +19,30 @@ const createCis = async () => {
     {
       ci: '1719953281',
       fingerprint: '123456',
-      full_name: 'Pedro Altamirano',
+      name: 'Pedro',
+      last_name: 'Altamirano',
+      status: 1,
     },
     {
       ci: '1719953282',
       fingerprint: '123457',
-      full_name: 'Persona 2',
+      name: 'Persona',
+      last_name: '2',
+      status: 1,
     },
     {
       ci: '1719953283',
       fingerprint: '123458',
-      full_name: 'Persona 3',
+      name: 'Persona',
+      last_name: '3',
+      status: 1,
+    },
+    {
+      ci: '1719953284',
+      fingerprint: '123459',
+      name: 'Persona',
+      last_name: '4',
+      status: 0,
     },
   ]
 
