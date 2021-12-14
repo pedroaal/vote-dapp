@@ -54,12 +54,14 @@ const Home = ({ total_votantes }) => {
   const [state, setState] = useState({ proposal: '', ci: '', fingerprint: '' })
   const [winner, setWinner] = useState('')
   const [stats, setStats] = useState()
+  const [proposals, setProposals] = useState([])
   const [totalVotes, setTotalVotes] = useState(0)
 
   const getStatsF = () => {
     getStats()
       .then(tx => {
         const labels = tx.map(vote => vote[0])
+        setProposals(labels)
         const data = tx.map(vote => Number(vote[1]))
         const datasets = [{
           ...dataset,
@@ -120,6 +122,11 @@ const Home = ({ total_votantes }) => {
     })
   }
 
+  const percent = () => {
+    const val = (totalVotes * 100) / total_votantes
+    return `${val}%`
+  }
+
   return (
     <div className='container'>
       <Head>
@@ -138,7 +145,7 @@ const Home = ({ total_votantes }) => {
       {
         totalVotes && total_votantes &&
         <div className="progress my-2" style={{ height: 30 }}>
-          <div className="progress-bar" role="progressbar" aria-valuenow={totalVotes} aria-valuemin="0" aria-valuemax={total_votantes}>Votos</div>
+          <div className="progress-bar" role="progressbar" style={{ width: percent() }} aria-valuenow={totalVotes} aria-valuemin="0" aria-valuemax={total_votantes}>Votos</div>
         </div>
       }
       {
@@ -149,9 +156,12 @@ const Home = ({ total_votantes }) => {
         <label htmlFor="proposal">Candidatos</label>
         <select className="form-control" name="proposal" id="proposal" onChange={handleSelect}>
           <option value=''>Selecciona uno...</option>
-          <option value='0'>Candidato 1</option>
-          <option value='1'>Candidato 2</option>
-          <option value='2'>Candidato 3</option>
+          {
+            proposals &&
+            proposals.map((proposal, index) => (
+              <option value={index}>{proposal}</option>
+            ))
+          }
         </select>
       </div>
 
