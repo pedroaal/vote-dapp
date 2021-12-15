@@ -32,6 +32,8 @@ const dataset = {
   borderWidth: 1,
 };
 
+const seconds = 120
+
 export async function getStaticProps(context) {
   const baseURL = 'http://localhost:3000'
   const res = await fetch(`${baseURL}/api/count`)
@@ -84,7 +86,7 @@ const Home = ({ total_votantes }) => {
     getStatsF()
     setInterval(() => {
       getStatsF()
-    }, (120 * 1000)); // sec * millsecs
+    }, (seconds * 1000)); // sec * millsecs
   }, [])
 
   const giveVote = async () => {
@@ -93,14 +95,19 @@ const Home = ({ total_votantes }) => {
       body: JSON.stringify(state)
     })
     const access = await res.json()
-    if (access) {
+    if (!res.ok) {
+      toast.error(access.error)
+      return
+    }
+
+    if (res.ok && access.status) {
       vote(state)
         .then(tx => {
           toast.success('Voto gerado')
         })
         .catch(err => {
           console.log(err)
-          toast.error(err)
+          toast.error('Ya has votado')
         })
     } else {
       toast.error('Datos no encontrados')
@@ -123,7 +130,7 @@ const Home = ({ total_votantes }) => {
   }
 
   const percent = () => {
-    const val = (totalVotes * 100) / total_votantes
+    const val = ((totalVotes * 100) / total_votantes).toFixed(2)
     return `${val}%`
   }
 
@@ -144,9 +151,12 @@ const Home = ({ total_votantes }) => {
       }
       {
         totalVotes && total_votantes &&
-        <div className="progress my-2" style={{ height: 30 }}>
-          <div className="progress-bar" role="progressbar" style={{ width: percent() }} aria-valuenow={totalVotes} aria-valuemin="0" aria-valuemax={total_votantes}>Votos</div>
-        </div>
+        <>
+          <p>Votos: {totalVotes}/{total_votantes}</p>
+          <div className="progress my-2" style={{ height: 30 }}>
+            <div className="progress-bar" role="progressbar" style={{ width: percent() }} aria-valuenow={totalVotes} aria-valuemin="0" aria-valuemax={total_votantes}>{percent()}</div>
+          </div>
+        </>
       }
       {
         winner &&
