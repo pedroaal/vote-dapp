@@ -6,7 +6,9 @@ let voteContract
 let isInit = false
 
 const init = async () => {
-  const providerUrl = process.env.PROVIDER_URL || 'http://localhost:8545'
+  const providerUrl_default = 'http://localhost:8545' // Ganache-cli
+  // const providerUrl_default = 'http://localhost:7545' // Ganache desktop
+  const providerUrl = process.env.PROVIDER_URL || providerUrl_default
 
   // check for metamask
   let provider = window.ethereum
