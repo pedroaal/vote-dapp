@@ -17,6 +17,11 @@ se inicia una blockchain local, si se desea se puede usar ganache desktop
 ```bash
 $ ganache-cli
 ```
+una ves iniciado el servidor, se conecta a metamask, revisar [tutorial]('https://gsthina.medium.com/connect-to-metamask-from-new-or-existing-web-application-with-truffle-and-ganache-f48aa763c0ac')
+para cambiar de servidor blockchain, se cambia el puerto en los archivos:
+```
+truffle-config.js y util>getWeb3.js
+```
 
 se compila y ejecuta el contrato en la blockchain de prueba
 ```bash
@@ -50,10 +55,19 @@ const sequelize = new Sequelize('aes_db', null, null, {
   storage: './db.sqlite3'
 });
 ```
+Se require tener sqlite instalado, en los os actuales ya lo trae por defecto
 Revisar [sequelize]('https://sequelize.org/master/')
+
+actualmente se realiza una verificacion de la cedula, para quitar esta verificacion, y poder usar cualquir numero de cedula, se comenta las lineas 16-19 del archivo:
+```
+pages > api > ci.js
+```
+
 ### Uso
-para el sistema de voto se escoje un candidato, se pone la ci y se vota
+Para usar el sistema es necesario tener hecha la coneccion de metamask con la blockchain y al billetera
 
-se obtiene en candidato ganador actual, con el boton get winner
+Para el sistema de voto se escoje un candidato, se pone la ci, la verificacion de la huella digital(ver db) y se vota
 
-se obtienen las estadisticas de todos los candidatos con get stats
+Se obtiene en candidato ganador actual, con el boton get winner
+
+Se obtienen las estadisticas de todos los candidatos con get stats
