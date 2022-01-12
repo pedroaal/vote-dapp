@@ -172,7 +172,7 @@ const Dapp = ({ total_votantes }) => {
           {
             proposals &&
             proposals.map((proposal, index) => (
-              <option value={index}>{proposal}</option>
+              <option key={index} value={index}>{proposal}</option>
             ))
           }
         </select>
