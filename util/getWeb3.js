@@ -49,7 +49,7 @@ const vote = async ({ proposal, ci }) => {
 
   return voteContract
     .methods
-    .vote(proposal, ci)
+    .vote(Number(proposal), Number(ci))
     .send({ from: selectedAccount })
     .then(vote => vote);
 }
